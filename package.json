@@ -1,0 +1,27 @@
+{
+  "name": "personal-healthcare-recommendation-system",
+  "version": "1.0.0",
+  "description": "college-project",
+  "homepage": "https://github.com/yashdarekar17/personal-healthcare-recommendation-system#readme",
+  "bugs": {
+    "url": "https://github.com/yashdarekar17/personal-healthcare-recommendation-system/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yashdarekar17/personal-healthcare-recommendation-system.git"
+  },
+  "license": "ISC",
+  "author": "group-5 (yash darekar , pranav kamath , sushil kolthe , om ghonge)",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "pg": "^8.23.0"
+  }
+}
