@@ -1,14 +1,14 @@
 const express = require('express');
-const route = express.Router();
-const {createHealthprofile , getHealthprofile , gethealthdashboard} = require('../controller/heathcareController');
+const router = express.Router();
+const { createHealthprofile, getHealthprofile, gethealthdashboard } = require('../controller/heathcareController');
 
-const healthrouter = () =>{
-    route.post('/heathreport' , createHealthprofile);
-    route.get('/heathreport/:id' , getHealthprofile)
-    route.get('/dashboard' , gethealthdashboard)
-}
 
-module.exports = {healthrouter};
+router.post('/healthreport', createHealthprofile);
+router.get('/healthreport/:id', getHealthprofile);
+router.get('/dashboard/:user_id', gethealthdashboard);
+
+
+module.exports = router;
 
 
 

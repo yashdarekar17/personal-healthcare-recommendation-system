@@ -2,9 +2,9 @@
  const {feedbackcontroller} = require('../controller/feedbackController')
  const router = express.Router();
 
- const feedbackrouter = () =>{
-    router.post('/feedback', feedbackcontroller);
- }
+ 
+ router.post('/feedback', feedbackcontroller);
  
  
- module.exports = {feedbackrouter};
+ 
+ module.exports =router;

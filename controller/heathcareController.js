@@ -24,7 +24,7 @@ const createHealthprofile = async (req , res)=>{
         )
 
         const values = [
-            user_id, height, weight, bmi , activity_level, sleep_hours, water_intake, diet_preference, symptoms
+            user_id, height, weight, bmi , activity_level, sleep_hours, water_intake, diet_preference, JSON.stringify(symptoms)
         ]
 
         const result  = await pool.query(query , values)
@@ -34,6 +34,7 @@ const createHealthprofile = async (req , res)=>{
         })
 
     }catch(err){
+        console.log(err.message);
         res.status(500).json({message:"internal server error"})
     }
 }
@@ -41,53 +42,66 @@ const createHealthprofile = async (req , res)=>{
 
 const getHealthprofile = async(req , res)=>{
    try{
-    const {user_id} = req.params;
-    const query = (
-        `SELECT * FROM health_profiles WHERE profile_id = $1`
-    )
-    
-    const value = user_id;
-    const result =  await pool.query(query , value)
+    const {id} = req.params;
+
+        const query = `
+            SELECT * FROM health_profiles
+            WHERE profile_id = $1
+        `;
+
+    const result = await pool.query(query, [id]);
     if(!result.rows[0]){
-        res.status(404).json({message:"health profile not found"});
+        return res.status(404).json({message:"health profile not found"});
     }
 
-    res.status(200).json({
+    return res.status(200).json({
         message:"health successfully fetched",
         user:result.rows[0]
     })
 
    }catch(err){
+    console.log(err.message);
     res.status(500).json({message:"internal server error"})
    }
 }
 
-const gethealthdashboard = async(req , res)=>{
-   try{
-     const {user_id} = req.params;
-    const query = `
+const gethealthdashboard = async (req, res) => {
+    try {
+        const { user_id } = req.params;
+        const query = `
             SELECT 
-                COUNT(u.id) AS total_users,
-                ROUND(AVG(h.bmi), 2) AS average_bmi,
-                ROUND(AVG(h.sleep_hours), 2) AS average_sleep,
-                ROUND(AVG(h.water_intake), 2) AS average_water
+                u.id AS user_id,
+                u.name,
+                u.email,
+                h.height,
+                h.weight,
+                h.bmi,
+                h.activity_level,
+                h.sleep_hours,
+                h.water_intake,
+                h.diet_preference,
+                h.symptoms,
+                h.updated_at
             FROM users u
-            LEFT JOIN health_profiles h ON u.id = h.user_id;
+            LEFT JOIN health_profiles h ON u.id = h.user_id
+            WHERE u.id = $1;
         `;
     
-    const value = user_id;
-    const result =  await pool.query(query , value)
-    if(!result.rows[0]){
-        res.status(404).json({message:"health profile not found"});
-    }
-   }catch(err){
-    res.status(500).json({message:"internal server error"})
-   }
+        const result = await pool.query(query, [user_id]);
+        
+        if (!result.rows[0]) {
+            return res.status(404).json({ message: "User not found" });
+        }
 
-   res.status(200).json({
-        message:"health successfully fetched in dashboard",
-        user:result.rows[0]
-    })
-}
+        return res.status(200).json({
+            message: "Dashboard stats successfully fetched",
+            dashboard: result.rows[0]
+        });
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
 
 module.exports = {createHealthprofile , getHealthprofile ,gethealthdashboard};
